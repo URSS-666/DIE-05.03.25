@@ -930,7 +930,15 @@ public class Pedido extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
+        try {
+            int codigo = Integer.parseInt(jTextField4.getText());
+            int cantidad = Integer.parseInt(jTextField5.getText());
+            String detalle = jTextArea1.getText();
+            String hora = jTextField6.getText();
+            objetoPedido.enviarPedido(codigo, cantidad, detalle, hora);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al enviar pedido: " + e.toString());
+        }
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
