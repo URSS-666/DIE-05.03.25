@@ -27,6 +27,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -163,19 +165,29 @@ public class CPedido {
         }
     }
 
-    public void enviarPedido(int codigo, int cantidad, String detalle, String hora) {
+    public void enviarPedido(JTable jTable3) {
         Database objetoConexion = new Database();
-        String sql = "INSERT INTO pedido (codigo, cantidad, detalle, hora) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO pedido (nombre, cantidad, unidad, total) VALUES (?, ?, ?, ?)";
 
         try (Connection conexion = objetoConexion.establecerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
 
-            ps.setInt(1, codigo);
-            ps.setInt(2, cantidad);
-            ps.setString(3, detalle);
-            ps.setString(4, hora);
+            DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String nombre = model.getValueAt(i, 0).toString();
+                int cantidad = Integer.parseInt(model.getValueAt(i, 1).toString());
+                String unidad = model.getValueAt(i, 2).toString();
+                double total = Double.parseDouble(model.getValueAt(i, 3).toString());
 
-            ps.executeUpdate();
+                ps.setString(1, nombre);
+                ps.setInt(2, cantidad);
+                ps.setString(3, unidad);
+                ps.setDouble(4, total);
+
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
             JOptionPane.showMessageDialog(null, "Pedido enviado correctamente");
 
         } catch (Exception e) {
