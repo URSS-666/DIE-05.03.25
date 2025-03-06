@@ -7,6 +7,7 @@ package BD;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
 
 /**
@@ -29,16 +30,34 @@ public class Database {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conectar = DriverManager.getConnection(cadena,usuario,contraseña);
+            createPedidoTable();
         } catch (Exception e) {
         }
         return conectar;
     }
+    
     public void cerrarConexion(){
         try {
             if (conectar!= null && !conectar.isClosed()) {
             conectar.close();
         }
         } catch (Exception e) {
+        }
+    }
+    
+    public void createPedidoTable() {
+        String createTableSQL = "CREATE TABLE IF NOT EXISTS pedido ("
+                + "id INT AUTO_INCREMENT PRIMARY KEY, "
+                + "nombre VARCHAR(255) NOT NULL, "
+                + "cantidad INT NOT NULL, "
+                + "unidad VARCHAR(255) NOT NULL, "
+                + "total DECIMAL(10, 2) NOT NULL"
+                + ")";
+        
+        try (Statement stmt = conectar.createStatement()) {
+            stmt.execute(createTableSQL);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al crear la tabla 'pedido': " + e.getMessage());
         }
     }
 }
