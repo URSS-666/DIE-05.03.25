@@ -164,6 +164,11 @@ public class CPedido {
     }
 
     public void enviarPedido(int codigo, int cantidad, String detalle, String hora) {
+        if (cantidad <= 0 || hora == null || hora.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Cantidad y hora no pueden estar vacíos o nulos");
+            return;
+        }
+
         Database objetoConexion = new Database();
         String sql = "INSERT INTO pedido (codigo, cantidad, detalle, hora) VALUES (?, ?, ?, ?)";
 
@@ -178,6 +183,8 @@ public class CPedido {
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Pedido enviado correctamente");
 
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Error al enviar pedido: " + e.toString());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al enviar pedido: " + e.toString());
         } finally {

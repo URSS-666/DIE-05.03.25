@@ -859,7 +859,17 @@ public class Pedido extends javax.swing.JPanel {
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         String nombre = jlNombre.getText();
-        int cantidad = (int) jSpinner1.getValue();
+        int cantidad = 0;
+        try {
+            cantidad = (int) jSpinner1.getValue();
+            if (cantidad <= 0) {
+                JOptionPane.showMessageDialog(null, "Cantidad no puede ser cero o negativa.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Cantidad debe ser un número válido.");
+            return;
+        }
         String unidad = jComboBox1.getSelectedItem().toString();
         float precio = Float.parseFloat(txtPrecio.getText());
         double total = cantidad * precio; // Example calculation for total
